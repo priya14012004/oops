@@ -1,0 +1,46 @@
+#include <graphics.h>
+#include <cmath>
+
+class Circle {
+public:
+    void drawCircle(int xc, int yc, int r) {
+        int x = 0, y = r, d = 3 - 2 * r;
+        while (y >= x) {
+            plot(xc, yc, x, y);
+            x++;
+            d = (d > 0) ? d + 4 * (x - y--) + 10 : d + 4 * x + 6;
+            plot(xc, yc, x, y);
+        }
+    }
+
+private:
+    void plot(int xc, int yc, int x, int y) {
+        putpixel(xc + x, yc + y, WHITE); putpixel(xc - x, yc + y, WHITE);
+        putpixel(xc + x, yc - y, WHITE); putpixel(xc - x, yc - y, WHITE);
+        putpixel(xc + y, yc + x, WHITE); putpixel(xc - y, yc + x, WHITE);
+        putpixel(xc + y, yc - x, WHITE); putpixel(xc - y, yc - x, WHITE);
+    }
+};
+
+class Line {
+public:
+    void drawLine(int x1, int y1, int x2, int y2) {
+        int steps = abs(x2 - x1) > abs(y2 - y1) ? abs(x2 - x1) : abs(y2 - y1);
+        float x = x1, y = y1, xInc = (x2 - x1) / (float)steps, yInc = (y2 - y1) / (float)steps;
+        for (int i = 0; i <= steps; i++, x += xInc, y += yInc) putpixel(round(x), round(y), WHITE);
+    }
+};
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+    Circle circle; Line line;
+    int l = 150, t = 150, s = 200, r = s / 2, cX = l + r, cY = t + r;
+
+    line.drawLine(l, t, l + s, t); line.drawLine(l + s, t, l + s, t + s);
+    line.drawLine(l + s, t + s, l, t + s); line.drawLine(l, t + s, l, t);
+    line.drawLine(l, t, l + s, t + s); line.drawLine(l + s, t, l, t + s);
+    circle.drawCircle(cX, cY, r);
+
+    getch(); closegraph();
+}

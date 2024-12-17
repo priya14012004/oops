@@ -1,0 +1,55 @@
+#include <iostream>
+using namespace std;
+
+class TicTacToe {
+protected:
+    char board[3][3];
+public:
+    virtual void initializeBoard() {
+        for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) board[i][j] = ' ';
+    }
+    virtual void displayBoard() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) cout << board[i][j] << (j < 2 ? " | " : "");
+            cout << "\n" << (i < 2 ? "--------\n" : "");
+        }
+    }
+    virtual bool checkWin() {
+        for (int i = 0; i < 3; i++) 
+            if (board[i][0] != ' ' && board[i][0] == board[i][1] && board[i][1] == board[i][2]) return true;
+        for (int i = 0; i < 3; i++) 
+            if (board[0][i] != ' ' && board[0][i] == board[1][i] && board[1][i] == board[2][i]) return true;
+        if (board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2]) return true;
+        if (board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0]) return true;
+        return false;
+    }
+};
+
+class PlayGame : public TicTacToe {
+public:
+    void play() {
+        int x, y, turn = 0;
+        initializeBoard();
+        while (turn < 9) {
+            displayBoard();
+            cout << "Enter row and column (0-2) for player " << (turn % 2 == 0 ? 'X' : 'O') << ": ";
+            cin >> x >> y;
+            if (board[x][y] == ' ') {
+                board[x][y] = (turn % 2 == 0 ? 'X' : 'O');
+                if (checkWin()) {
+                    displayBoard();
+                    cout << "Player " << (turn % 2 == 0 ? 'X' : 'O') << " wins!\n"; return;
+                }
+                turn++;
+            }
+        }
+        displayBoard();
+        cout << "It's a draw!\n";
+    }
+};
+
+int main() {
+    PlayGame game;
+    game.play();
+    return 0;
+}
